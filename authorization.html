@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизація</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            position: relative; /* Добавляем для позиционирования кнопки */
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        form {
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        .home-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-decoration: none; /* Убираем подчеркивание */
+            color: black; /* Чтобы текст был виден */
+        }
+        .home-button:hover::after {
+            content: "На головну"; /* Текст, который появится при наведении */
+            display: block;
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f0f0f0;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.php" class="home-button">
+        <img src="img/home.png" alt="Home" style="width: 32px; height: auto;">
+    </a>
+    <div class="container">
+        <h1>Авторизація</h1>
+        <form id="authorizationForm" method="POST" action="authorization.php">
+            <div class="form-group">
+                <label for="username">Логін:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Увійти</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('authorizationForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Предотвращаем стандартное поведение формы
+            const formData = new FormData(this); // Создаем объект FormData для формы
+
+            // Отправка данных на сервер
+            fetch('authorization.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Ви успішно увійшли'); // Тут можно реализовать переход на другую страницу
+                    window.location.href = 'home.php';
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Помилка:', error);
+            });
+        });
+    </script>
+</body>
+</html>
